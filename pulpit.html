@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Flow: Pulpit Focusu</title>
+<!-- Ładowanie Tailwind CSS dla stylizacji -->
+<script src="https://www.google.com/search?q=https://cdn.tailwindcss.com"></script>
+<!-- Konfiguracja czcionki Inter i niestandardowe style -->
+<style>
+@import url('https://www.google.com/search?q=https://fonts.googleapis.com/css2%3Ffamily%3DInter:wght%40100..900%26display%3Dswap');
+body {
+font-family: 'Inter', sans-serif;
+background-color: #f7f3f0; /* Bardzo jasny beż /
+color: #333;
+line-height: 1.6;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 1rem;
+}
+.container {
+width: 100%;
+max-width: 420px; / Typowa szerokość mobilna /
+margin-top: 2rem;
+background-color: white;
+padding: 1.5rem;
+border-radius: 20px;
+box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+.timer-display {
+font-size: 3.5rem;
+font-weight: 700;
+letter-spacing: -1px;
+color: #4a5568; / Ciemny szary /
+text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+.action-button {
+transition: all 0.2s ease;
+}
+.action-button:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.gemini-container {
+border-left: 4px solid #F6D365; / Akcent złota/żółci */
+background-color: #fffcf5;
+}
+</style>
+<!-- Ikony Lucide -->
+<script type="module">
+import { createIcons, Timer, Play, Pause, RotateCcw, Zap, Target, Loader } from 'https://www.google.com/search?q=https://unpkg.com/lucide%40latest/dist/umd/lucide.js';
+createIcons({ icons: { Timer, Play, Pause, RotateCcw, Zap, Target, Loader } });
+</script>
+</head>
+<body class="bg-gray-50">
+<div class="container">
+    <!-- Tytuł i Estetyka -->
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Digital Flow</h1>
+    <p class="text-sm text-center text-gray-500 mb-6">Pulpit Focusu: Rytm i Akcja</p>
+
+    <!-- Sekcja Zegara Pomodoro (Rytm) -->
+    <div id="timer-box" class="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-inner mb-6">
+        <h2 class="text-xl font-semibold text-indigo-600 mb-4">TWÓJ RYTM FOCUSU</h2>
+        <div id="timer-display" class="timer-display mb-4">25:00</div>
+        <div id="timer-status" class="text-md font-medium text-gray-600 mb-4">Sesja Focus</div>
+
+        <div class="flex space-x-4">
+            <button id="start-pause-btn" class="action-button bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full flex items-center shadow-lg">
+                <i data-lucide="play" class="w-5 h-5 mr-1"></i> Start
+            </button>
+            <button id="reset-btn" class="action-button bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-full flex items-center shadow-md">
+                <i data-lucide="rotate-ccw" class="w-5 h-5 mr-1"></i> Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Sekcja Generowania (AKCJA: Startuj Zanim Będziesz Gotowy) -->
+    <div class="gemini-container p-4 rounded-xl mb-6 shadow-sm">
+        <h3 class="text-lg font-bold text-gray-700 mb-3 flex items-center">
+            <i data-lucide="zap" class="w-5 h-5 text-yellow-600 mr-2"></i> ISKRA AKCJI (AI)
+        </h3>
+        <p class="text-sm text-gray-500 mb-4">Opisz swój cel, a AI da Ci plan na 15 minut lub cytat motywacyjny.</p>
+        
+        <textarea id="action-goal" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm" rows="2" placeholder="Np. Ukończyć wstęp do raportu..."></textarea>
+        
+        <div class="flex space-x-2 mt-3">
+            <button id="generate-plan-btn" class="action-button w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-3 rounded-lg text-sm flex items-center justify-center">
+                <i data-lucide="loader" class="w-4 h-4 mr-1 animate-spin hidden" id="plan-loader"></i>
+                GENERUJ MIKRO-PLAN
+            </button>
+        </div>
+        
+        <div id="action-result" class="mt-4 p-3 bg-white border border-yellow-300 rounded-lg text-sm hidden"></div>
+    </div>
+
+    <!-- Sekcja Skaner Linii Mety (WYTRWAŁOŚĆ) -->
+    <div class="gemini-container p-4 rounded-xl shadow-sm">
+        <h3 class="text-lg font-bold text-gray-700 mb-3 flex items-center">
+            <i data-lucide="target" class="w-5 h-5 text-red-600 mr-2"></i> SKANER LINII METY (AI)
+        </h3>
+        <p class="text-sm text-gray-500 mb-4">Analiza pułapek wytrwałości. Nie odpuszczaj na ostatnim metrze!</p>
+        
+        <textarea id="perseverance-goal" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 text-sm" rows="2" placeholder="Np. Przez ostatnie 3 dni nie mogę zmusić się do pisania wniosku..."></textarea>
+        
+        <div class="flex space-x-2 mt-3">
+            <button id="generate-perseverance-btn" class="action-button w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-lg text-sm flex items-center justify-center">
+                <i data-lucide="loader" class="w-4 h-4 mr-1 animate-spin hidden" id="perseverance-loader"></i>
+                SKANUJ PUŁAPKI
+            </button>
+        </div>
+        
+        <div id="perseverance-result" class="mt-4 p-3 bg-white border border-red-300 rounded-lg text-sm hidden"></div>
+    </div>
+
+    <!-- Stopka -->
+    <footer class="text-center text-xs text-gray-400 mt-6">
+        Digital Flow System by [Twoja Marka]. Wymaga połączenia z internetem.
+    </footer>
+</div>
+
+<script>
+    // UWAGA: KONIECZNA KONWERSJA DANYCH GLOBALNYCH NA WARTOŚCI JAVASCRIPT
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const apiKey = ""; // API Key jest zarządzany przez Canvas
+    const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+    
+    // --- ZMIENNE ZEGARA ---
+    let timer;
+    let isRunning = false;
+    let isFocusTime = true;
+    let timeLeft = 25 * 60; // Domyślnie 25 minut (Focus)
+
+    const timerDisplay = document.getElementById('timer-display');
+    const timerStatus = document.getElementById('timer-status');
+    const startPauseBtn = document.getElementById('start-pause-btn');
+    const resetBtn = document.getElementById('reset-btn');
+
+    // --- FUNKCJE ZEGARA ---
+
+    function updateDisplay() {
+        const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+        const seconds = String(timeLeft % 60).padStart(2, '0');
+        timerDisplay.textContent = `${minutes}:${seconds}`;
+
+        if (timeLeft === 0) {
+            clearInterval(timer);
+            isRunning = false;
+            
+            // Zmiana statusu i czasu
+            isFocusTime = !isFocusTime;
+            timeLeft = isFocusTime ? 25 * 60 : 5 * 60; // 25 min Focus / 5 min Przerwa
+            timerStatus.textContent = isFocusTime ? 'Sesja Focus' : 'Krótka Przerwa';
+
+            // Zmiana przycisku na Play
+            startPauseBtn.innerHTML = '<i data-lucide="play" class="w-5 h-5 mr-1"></i> Start';
+            startPauseBtn.classList.replace('bg-green-500', 'bg-indigo-500');
+
+            // Powiadomienie (tylko w przeglądarce, działa lepiej niż alert())
+            alert('Czas minął! Zmień tryb.');
+        }
+    }
+
+    function toggleTimer() {
+        if (isRunning) {
+            // Pauza
+            clearInterval(timer);
+            startPauseBtn.innerHTML = '<i data-lucide="play" class="w-5 h-5 mr-1"></i> Start';
+            startPauseBtn.classList.replace('bg-green-500', 'bg-indigo-500');
+        } else {
+            // Start
+            timer = setInterval(() => {
+                timeLeft--;
+                updateDisplay();
+            }, 1000);
+            startPauseBtn.innerHTML = '<i data-lucide="pause" class="w-5 h-5 mr-1"></i> Pause';
+            startPauseBtn.classList.replace('bg-indigo-500', 'bg-green-500');
+        }
+        isRunning = !isRunning;
+    }
+
+    function resetTimer() {
+        clearInterval(timer);
+        isRunning = false;
+        isFocusTime = true;
+        timeLeft = 25 * 60;
+        updateDisplay();
+        timerStatus.textContent = 'Sesja Focus';
+        startPauseBtn.innerHTML = '<i data-lucide="play" class="w-5 h-5 mr-1"></i> Start';
+        startPauseBtn.classList.replace('bg-green-500', 'bg-indigo-500');
+    }
+
+    // Event Listenery dla Zegara
+    startPauseBtn.addEventListener('click', toggleTimer);
+    resetBtn.addEventListener('click', resetTimer);
+    updateDisplay(); // Inicjalizacja wyświetlacza
+
+    // --- FUNKCJE API GEMINI ---
+
+    async function fetchWithRetry(url, payload, maxRetries = 3) {
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('API Error:', errorData);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+
+            } catch (error) {
+                if (i < maxRetries - 1) {
+                    const delay = Math.pow(2, i) * 1000;
+                    console.warn(`Retry ${i + 1} of ${maxRetries} after ${delay}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                } else {
+                    throw error;
+                }
+            }
+        }
+    }
+
+    // --- GENEROWANIE MIKRO-PLANU (AKCJA) ---
+
+    document.getElementById('generate-plan-btn').addEventListener('click', async () => {
+        const goal = document.getElementById('action-goal').value.trim();
+        const resultDiv = document.getElementById('action-result');
+        const loader = document.getElementById('plan-loader');
+
+        if (!goal) {
+            resultDiv.innerHTML = '<p class="text-red-500">Proszę wpisać cel lub zadanie.</p>';
+            resultDiv.classList.remove('hidden');
+            return;
+        }
+
+        loader.classList.remove('hidden');
+        resultDiv.classList.add('hidden');
+        resultDiv.innerHTML = '';
+
+        const systemPrompt = `Jesteś "Asystentem Akcji", który pomaga w szybkim rozpoczęciu pracy. Twoja odpowiedź musi być w języku POLSKIM. Przeanalizuj cel użytkownika i stwórz 3 bardzo proste, mikroskopijne kroki, które zajmą łącznie maksymalnie 15 minut. Zawsze podawaj 3 kroki, używając punktów. Zawsze zacznij od frazy: "Twój 15-minutowy plan startowy:"`;
+        
+        const userQuery = `Mój cel: ${goal}. Daj mi 3 kroki, które pomogą mi zacząć teraz.`;
+
+        const payload = {
+            contents: [{ parts: [{ text: userQuery }] }],
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+        };
+
+        try {
+            const result = await fetchWithRetry(geminiApiUrl, payload);
+            const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+            
+            if (text) {
+                // Konwersja tekstu z AI na format HTML listy
+                const formattedText = text.replace(/\n/g, '<br>').replace(/^- /gm, '• ');
+                resultDiv.innerHTML = `<p class="font-semibold text-gray-800 mb-2">🚀 Gotowe!</p>${formattedText}`;
+            } else {
+                resultDiv.innerHTML = '<p class="text-red-500">Błąd: Nie udało się wygenerować planu. Spróbuj ponownie.</p>';
+            }
+        } catch (error) {
+            console.error('Błąd generowania planu:', error);
+            resultDiv.innerHTML = '<p class="text-red-500">Błąd API. Upewnij się, że plik jest na hostingu WWW, a klucz API jest aktywny. Funkcja AI nie działa lokalnie.</p>';
+        } finally {
+            loader.classList.add('hidden');
+            resultDiv.classList.remove('hidden');
+        }
+    });
+
+    // --- SKANER LINII METY (WYTRWAŁOŚĆ) ---
+    
+    document.getElementById('generate-perseverance-btn').addEventListener('click', async () => {
+        const goal = document.getElementById('perseverance-goal').value.trim();
+        const resultDiv = document.getElementById('perseverance-result');
+        const loader = document.getElementById('perseverance-loader');
+
+        if (!goal) {
+            resultDiv.innerHTML = '<p class="text-red-500">Proszę opisać cel, który sprawia problem.</p>';
+            resultDiv.classList.remove('hidden');
+            return;
+        }
+
+        loader.classList.remove('hidden');
+        resultDiv.classList.add('hidden');
+        resultDiv.innerHTML = '';
+
+        const systemPrompt = `Jesteś "Skanerem Linii Mety". Pomagasz w pokonaniu paraliżu końcowego (prokrastynacji na ostatnim etapie). Twoja odpowiedź musi być w języku POLSKIM. W pierwszym punkcie zdiagnozuj, jaka jest prawdopodobna pułapka psychologiczna (np. Perfekcjonizm, Strach przed sukcesem, Znużenie). W drugim punkcie podaj JEDNĄ, natychmiastową Anty-strategię (np. Technika 5 minut, Zmień kontekst, Zakończ niedoskonale).`;
+        
+        const userQuery = `Mam problem z dokończeniem/ruszeniem tego zadania: "${goal}". Jaka jest moja psychologiczna pułapka i jaka jest natychmiastowa anty-strategia?`;
+
+        const payload = {
+            contents: [{ parts: [{ text: userQuery }] }],
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+        };
+
+        try {
+            const result = await fetchWithRetry(geminiApiUrl, payload);
+            const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+            
+            if (text) {
+                const formattedText = text.replace(/\n/g, '<br>').replace(/^- /gm, '• ');
+                resultDiv.innerHTML = `<p class="font-semibold text-gray-800 mb-2">🏁 Skan Linii Mety:</p>${formattedText}`;
+            } else {
+                resultDiv.innerHTML = '<p class="text-red-500">Błąd: Nie udało się wykonać skanu. Spróbuj ponownie.</p>';
+            }
+        } catch (error) {
+            console.error('Błąd skanera:', error);
+            resultDiv.innerHTML = '<p class="text-red-500">Błąd API. Upewnij się, że plik jest na hostingu WWW, a klucz API jest aktywny. Funkcja AI nie działa lokalnie.</p>';
+        } finally {
+            loader.classList.add('hidden');
+            resultDiv.classList.remove('hidden');
+        }
+    });
+</script>
+
+</body>
+</html>
+
+
+Dodanie pliku Pulpit Focusu
